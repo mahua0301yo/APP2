@@ -4,3 +4,4 @@ flask
 opencv-python-headless
 numpy
 pillow
+av

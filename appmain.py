@@ -6,7 +6,7 @@ import cv2
 import base64
 import io
 from flask import Flask, request, jsonify
-from streamlit.components.v1 import components
+import streamlit.components.v1 as components  # 正確的導入方式
 
 # 初始化 Flask 應用
 app = Flask(__name__)
@@ -62,7 +62,7 @@ html_code = """
 """
 
 # 使用 Streamlit 嵌入 HTML
-components.html(html_code, height=600)
+components.html(html_code, height=600)  # 正確使用 components.html()
 
 # 後端 Flask 處理影像的路由
 @app.route('/process_frame', methods=['POST'])

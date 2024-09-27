@@ -1,4 +1,30 @@
 import streamlit as st
+import av
+from streamlit_webrtc import webrtc_streamer, VideoProcessorBase
+from ultralytics import YOLO
+import cv2
+import numpy as np
+
+# YOLO 模型載入
+model = YOLO('yolov8n-pose.pt')
+
+# 自定義影像處理器
+class YOLOProcessor(VideoProcessorBase):
+    def recv(self, frame):
+        img = frame.to_ndarray(format="bgr24")
+
+        # 使用 YOLO 進行物件偵測
+        results = model(img)
+        result_img = np.squeeze(results.render())
+
+        return av.VideoFrame.from_ndarray(result_img, format="bgr24")
+
+# Streamlit 標題
+st.title("手機鏡頭物件偵測")
+
+# 啟動 WebRTC 並運行 YOLO 物件偵測
+webrtc_streamer(key="example", video_processor_factory=YOLOProcessor)
+import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
 import numpy as np

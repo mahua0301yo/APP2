@@ -6,7 +6,7 @@ import cv2
 import base64
 import io
 from flask import Flask, request, jsonify
-import streamlit.components.v1 as components  # 正確的導入方式
+import streamlit.components.v1 as components
 
 # 初始化 Flask 應用
 app = Flask(__name__)
@@ -21,10 +21,13 @@ st.title("YOLO 即時鏡頭物件偵測")
 html_code = """
 <video id="video" width="100%" autoplay></video>
 <canvas id="canvas" style="display:none;"></canvas>
+<img id="result" style="max-width: 100%; margin-top: 20px;"/>
+
 <script>
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
     const context = canvas.getContext('2d');
+    const resultImage = document.getElementById('result');
 
     // 訪問使用者的攝像頭
     navigator.mediaDevices.getUserMedia({ video: true })
@@ -48,9 +51,8 @@ html_code = """
                 })
                 .then(response => response.json())
                 .then(data => {
-                    const img = new Image();
-                    img.src = 'data:image/jpeg;base64,' + data.result_image;
-                    document.body.appendChild(img);
+                    // 更新顯示偵測後的影像
+                    resultImage.src = 'data:image/jpeg;base64,' + data.result_image;
                 })
                 .catch(error => console.error('錯誤：', error));
             }, 100); // 每100毫秒傳送一次影像
@@ -62,7 +64,7 @@ html_code = """
 """
 
 # 使用 Streamlit 嵌入 HTML
-components.html(html_code, height=600)  # 正確使用 components.html()
+components.html(html_code, height=600)
 
 # 後端 Flask 處理影像的路由
 @app.route('/process_frame', methods=['POST'])

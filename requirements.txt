@@ -1,7 +1,6 @@
 streamlit
 streamlit_webrtc
 ultralytics
-flask
 opencv-python-headless
 numpy
 pillow
